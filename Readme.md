@@ -4,7 +4,7 @@ This is a terrible hack I made in 6 hours for the [TerribleHack](http://terrible
 
 It uses OpenCV and [dlib](http://blog.dlib.net/2014/08/real-time-face-pose-estimation.html) to perform face pose detection on downloaded Youtube videos and webcam photos. It then uses a triangulation of the detected face points to texture map a picture of your face onto the faces in the video. The face detection is computed beforehand in a C++ program and outpus location data in a JSON file, which is read by a Three.JS web page that renders the video and synchronizes the mapped rendering of a face on top of the video.
 
-![Gif](http://i.imgur.com/0geqsOU.gifv)
+![Gif](http://i.imgur.com/0geqsOU.gif)
 
 ![Face detection](http://i.imgur.com/w7lfLjW.png)
 
