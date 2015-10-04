@@ -6,3 +6,6 @@ Makefile
 dlib
 *.sublime-project
 *.sublime-workspace
+res/model.bin
+web/*.mp4
+web/*.json

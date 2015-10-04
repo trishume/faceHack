@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Video Texture (Three.js)</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel=stylesheet href="http://stemkoski.github.io/Three.js/css/base.css"/>
+</head>
+<body>
+
+<script src="http://stemkoski.github.io/Three.js/js/Three.js"></script>
+<script src="http://stemkoski.github.io/Three.js/js/Stats.js"></script>
+<script src="http://stemkoski.github.io/Three.js/js/Detector.js"></script>
+<script src="http://stemkoski.github.io/Three.js/js/OrbitControls.js"></script>
+<script src="http://stemkoski.github.io/Three.js/js/THREEx.KeyboardState.js"></script>
+<script src="http://stemkoski.github.io/Three.js/js/THREEx.FullScreen.js"></script>
+<script src="http://stemkoski.github.io/Three.js/js/THREEx.WindowResize.js"></script>
+
+<!-- jQuery code to display an information button and box when clicked. -->
+<script src="http://stemkoski.github.io/Three.js/js/jquery-1.9.1.js"></script>
+<script src="http://stemkoski.github.io/Three.js/js/jquery-ui.js"></script>
+<link rel=stylesheet href="http://stemkoski.github.io/Three.js/css/jquery-ui.css" />
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+<script>
+/*
+  Three.js "tutorials by example"
+  Author: Lee Stemkoski
+  Date: July 2013 (three.js v59dev)
+*/
+
+var triangleFaces = [
+  new THREE.Face3(19, 23, 24),
+  new THREE.Face3(20, 23, 19),
+  new THREE.Face3(21, 23, 20),
+  new THREE.Face3(21, 22, 23),
+  new THREE.Face3(23, 44, 24),
+  new THREE.Face3(44, 25, 24),
+  new THREE.Face3(43, 44, 23),
+  new THREE.Face3(22, 43, 23),
+  new THREE.Face3(21, 27, 22),
+  new THREE.Face3(19, 38, 20),
+  new THREE.Face3(44, 26, 25),
+  new THREE.Face3(45, 26, 44),
+  new THREE.Face3(37, 38, 19),
+  new THREE.Face3(18, 37, 19),
+  new THREE.Face3(38, 21, 20),
+  new THREE.Face3(22, 42, 43),
+  new THREE.Face3(39, 21, 38),
+  new THREE.Face3(18, 36, 37),
+  new THREE.Face3(46, 45, 44),
+  new THREE.Face3(17, 36, 18),
+  new THREE.Face3(27, 42, 22),
+  new THREE.Face3(47, 44, 43),
+  new THREE.Face3(47, 46, 44),
+  new THREE.Face3(42, 47, 43),
+  new THREE.Face3(39, 27, 21),
+  new THREE.Face3(36, 41, 37),
+  new THREE.Face3(45, 16, 26),
+  new THREE.Face3(40, 39, 38),
+  new THREE.Face3(37, 40, 38),
+  new THREE.Face3(41, 40, 37),
+  new THREE.Face3(28, 42, 27),
+  new THREE.Face3(39, 28, 27),
+  new THREE.Face3(0, 36, 17),
+  new THREE.Face3(45, 15, 16),
+  new THREE.Face3(29, 42, 28),
+  new THREE.Face3(1, 36, 0),
+  new THREE.Face3(39, 29, 28),
+  new THREE.Face3(46, 15, 45),
+  new THREE.Face3(29, 47, 42),
+  new THREE.Face3(40, 29, 39),
+  new THREE.Face3(46, 14, 15),
+  new THREE.Face3(1, 41, 36),
+  new THREE.Face3(29, 31, 30),
+  new THREE.Face3(35, 29, 30),
+  new THREE.Face3(35, 47, 29),
+  new THREE.Face3(40, 31, 29),
+  new THREE.Face3(30, 34, 35),
+  new THREE.Face3(32, 30, 31),
+  new THREE.Face3(33, 34, 30),
+  new THREE.Face3(32, 33, 30),
+  new THREE.Face3(2, 41, 1),
+  new THREE.Face3(35, 46, 47),
+  new THREE.Face3(35, 14, 46),
+  new THREE.Face3(41, 31, 40),
+  new THREE.Face3(33, 52, 34),
+  new THREE.Face3(50, 33, 32),
+  new THREE.Face3(31, 50, 32),
+  new THREE.Face3(52, 35, 34),
+  new THREE.Face3(50, 51, 33),
+  new THREE.Face3(51, 52, 33),
+  new THREE.Face3(52, 53, 35),
+  new THREE.Face3(2, 31, 41),
+  new THREE.Face3(49, 50, 31),
+  new THREE.Face3(35, 13, 14),
+  new THREE.Face3(51, 63, 52),
+  new THREE.Face3(63, 53, 52),
+  new THREE.Face3(61, 51, 50),
+  new THREE.Face3(49, 61, 50),
+  new THREE.Face3(62, 63, 51),
+  new THREE.Face3(61, 62, 51),
+  new THREE.Face3(3, 31, 2),
+  new THREE.Face3(64, 54, 53),
+  new THREE.Face3(53, 13, 35),
+  new THREE.Face3(48, 60, 49),
+  new THREE.Face3(3, 49, 31),
+  new THREE.Face3(63, 64, 53),
+  new THREE.Face3(60, 61, 49),
+  new THREE.Face3(62, 65, 63),
+  new THREE.Face3(54, 13, 53),
+  new THREE.Face3(65, 64, 63),
+  new THREE.Face3(67, 62, 61),
+  new THREE.Face3(60, 67, 61),
+  new THREE.Face3(67, 66, 62),
+  new THREE.Face3(66, 65, 62),
+  new THREE.Face3(3, 48, 49),
+  new THREE.Face3(54, 12, 13),
+  new THREE.Face3(4, 48, 3),
+  new THREE.Face3(65, 55, 64),
+  new THREE.Face3(55, 54, 64),
+  new THREE.Face3(59, 67, 60),
+  new THREE.Face3(48, 59, 60),
+  new THREE.Face3(56, 55, 65),
+  new THREE.Face3(59, 58, 67),
+  new THREE.Face3(66, 56, 65),
+  new THREE.Face3(58, 66, 67),
+  new THREE.Face3(57, 56, 66),
+  new THREE.Face3(58, 57, 66),
+  new THREE.Face3(54, 11, 12),
+  new THREE.Face3(5, 48, 4),
+  new THREE.Face3(55, 11, 54),
+  new THREE.Face3(5, 59, 48),
+  new THREE.Face3(55, 10, 11),
+  new THREE.Face3(6, 59, 5),
+  new THREE.Face3(56, 10, 55),
+  new THREE.Face3(9, 10, 56),
+  new THREE.Face3(59, 7, 58),
+  new THREE.Face3(6, 7, 59),
+  new THREE.Face3(58, 8, 57),
+  new THREE.Face3(8, 56, 57),
+  new THREE.Face3(8, 9, 56),
+  new THREE.Face3(7, 8, 58),
+  new THREE.Face3(13, 15, 14)
+];
+
+var overlayOutset = 5.0;
+var initialVerts = [
+  new THREE.Vector3(561.0,201.0, 5.0),
+  new THREE.Vector3(564.0,231.0, 5.0),
+  new THREE.Vector3(569.0,260.0, 5.0),
+  new THREE.Vector3(575.0,290.0, 5.0),
+  new THREE.Vector3(585.0,318.0, 5.0),
+  new THREE.Vector3(601.0,345.0, 5.0),
+  new THREE.Vector3(622.0,368.0, 5.0),
+  new THREE.Vector3(649.0,386.0, 5.0),
+  new THREE.Vector3(679.0,391.0, 5.0),
+  new THREE.Vector3(709.0,386.0, 5.0),
+  new THREE.Vector3(734.0,366.0, 5.0),
+  new THREE.Vector3(755.0,342.0, 5.0),
+  new THREE.Vector3(769.0,313.0, 5.0),
+  new THREE.Vector3(776.0,282.0, 5.0),
+  new THREE.Vector3(780.0,250.0, 5.0),
+  new THREE.Vector3(785.0,220.0, 5.0),
+  new THREE.Vector3(786.0,189.0, 5.0),
+  new THREE.Vector3(582.0,176.0, 5.0),
+  new THREE.Vector3(596.0,162.0, 5.0),
+  new THREE.Vector3(616.0,157.0, 5.0),
+  new THREE.Vector3(638.0,158.0, 5.0),
+  new THREE.Vector3(658.0,165.0, 5.0),
+  new THREE.Vector3(696.0,162.0, 5.0),
+  new THREE.Vector3(714.0,152.0, 5.0),
+  new THREE.Vector3(735.0,148.0, 5.0),
+  new THREE.Vector3(755.0,151.0, 5.0),
+  new THREE.Vector3(769.0,165.0, 5.0),
+  new THREE.Vector3(678.0,188.0, 5.0),
+  new THREE.Vector3(680.0,207.0, 5.0),
+  new THREE.Vector3(681.0,226.0, 5.0),
+  new THREE.Vector3(682.0,245.0, 5.0),
+  new THREE.Vector3(661.0,265.0, 5.0),
+  new THREE.Vector3(671.0,269.0, 5.0),
+  new THREE.Vector3(682.0,272.0, 5.0),
+  new THREE.Vector3(692.0,268.0, 5.0),
+  new THREE.Vector3(701.0,264.0, 5.0),
+  new THREE.Vector3(605.0,198.0, 5.0),
+  new THREE.Vector3(617.0,190.0, 5.0),
+  new THREE.Vector3(632.0,189.0, 5.0),
+  new THREE.Vector3(647.0,198.0, 5.0),
+  new THREE.Vector3(632.0,203.0, 5.0),
+  new THREE.Vector3(617.0,203.0, 5.0),
+  new THREE.Vector3(706.0,196.0, 5.0),
+  new THREE.Vector3(720.0,185.0, 5.0),
+  new THREE.Vector3(735.0,184.0, 5.0),
+  new THREE.Vector3(748.0,191.0, 5.0),
+  new THREE.Vector3(737.0,198.0, 5.0),
+  new THREE.Vector3(722.0,199.0, 5.0),
+  new THREE.Vector3(641.0,315.0, 5.0),
+  new THREE.Vector3(652.0,299.0, 5.0),
+  new THREE.Vector3(668.0,291.0, 5.0),
+  new THREE.Vector3(679.0,295.0, 5.0),
+  new THREE.Vector3(692.0,291.0, 5.0),
+  new THREE.Vector3(706.0,298.0, 5.0),
+  new THREE.Vector3(717.0,314.0, 5.0),
+  new THREE.Vector3(707.0,332.0, 5.0),
+  new THREE.Vector3(693.0,341.0, 5.0),
+  new THREE.Vector3(680.0,342.0, 5.0),
+  new THREE.Vector3(666.0,341.0, 5.0),
+  new THREE.Vector3(652.0,334.0, 5.0),
+  new THREE.Vector3(649.0,314.0, 5.0),
+  new THREE.Vector3(668.0,306.0, 5.0),
+  new THREE.Vector3(680.0,307.0, 5.0),
+  new THREE.Vector3(692.0,305.0, 5.0),
+  new THREE.Vector3(710.0,314.0, 5.0),
+  new THREE.Vector3(692.0,321.0, 5.0),
+  new THREE.Vector3(679.0,323.0, 5.0),
+  new THREE.Vector3(667.0,322.0, 5.0)
+]
+
+var scenes = {
+  "rick": {
+    "video": "rick.mp4",
+    "data": "videodata2.json",
+    "width": 640,
+    "height": 480
+  },
+  "hoff": {
+    "video": "hooked.mp4",
+    "data": "videodata3.json",
+    "width": 446,
+    "height": 336
+  }
+}
+var sceneData = scenes["rick"];
+
+// MAIN
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+var keyboard = new THREEx.KeyboardState();
+// custom global variables
+var video, videoImage, videoImageContext, videoTexture;
+
+var curFrame = 0;
+var overlayGeom;
+var faceData = null;
+
+init();
+animate();
+// FUNCTIONS
+function init()
+{
+  // SCENE
+  scene = new THREE.Scene();
+  // CAMERA
+  var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+  var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+  camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+  scene.add(camera);
+  camera.position.set(0,150,400);
+  camera.lookAt(scene.position);
+  // RENDERER
+  if ( Detector.webgl )
+    renderer = new THREE.WebGLRenderer( {antialias:true} );
+  else
+    renderer = new THREE.CanvasRenderer();
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  container = document.getElementById( 'ThreeJS' );
+  container.appendChild( renderer.domElement );
+  // CONTROLS
+  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  // EVENTS
+  THREEx.WindowResize(renderer, camera);
+  THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+  // STATS
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.bottom = '0px';
+  stats.domElement.style.zIndex = 100;
+  container.appendChild( stats.domElement );
+  // LIGHT
+  var light = new THREE.PointLight(0xffffff);
+  light.position.set(0,250,0);
+  scene.add(light);
+  // OVERLAY
+  overlayGeom = new THREE.Geometry();
+  overlayGeom.vertices = initialVerts;
+  overlayGeom.faces = triangleFaces;
+  // overlayGeom.faceVertexUvs[0].push([
+  //   new THREE.UV(0, 0),
+  //   new THREE.UV(0, 0),
+  //   new THREE.UV(0, 0),
+  //   new THREE.UV(0, 0)
+  // ]);
+  overlayGeom.computeFaceNormals();
+  overlayGeom.computeCentroids();
+  overlayGeom.computeVertexNormals();
+  var overlayMat = new THREE.MeshBasicMaterial({
+    map: THREE.ImageUtils.loadTexture('test1.jpg')
+    // map: THREE.ImageUtils.generateDataTexture(500,500,'555555'),
+    // wireframe: true
+  });
+  var overlayMesh= new THREE.Mesh( overlayGeom, overlayMat);
+  scene.add(overlayMesh);
+  // FLOOR
+  // var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
+  // floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+  // floorTexture.repeat.set( 10, 10 );
+  // var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+  // var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+  // var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+  // floor.position.y = -0.5;
+  // floor.rotation.x = Math.PI / 2;
+  // scene.add(floor);
+  // SKYBOX/FOG
+  var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
+  var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
+  var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
+  // scene.add(skyBox);
+  scene.fog = new THREE.FogExp2( 0x9999ff, 0.00025 );
+
+
+  ///////////
+  // VIDEO //
+  ///////////
+
+  // create the video element
+  video = document.createElement( 'video' );
+  // video.id = 'video';
+  // video.type = ' video/ogg; codecs="theora, vorbis" ';
+  video.src = sceneData.video;
+  video.load(); // must call after setting/changing source
+  // video.play();
+
+  // alternative method --
+  // create DIV in HTML:
+  // <video id="myVideo" autoplay style="display:none">
+  //    <source src="videos/sintel.ogv" type='video/ogg; codecs="theora, vorbis"'>
+  // </video>
+  // and set JS variable:
+  // video = document.getElementById( 'myVideo' );
+  video.pause();
+  video.currentTime = 0;
+
+  videoImage = document.createElement( 'canvas' );
+  videoImage.width = sceneData.width;
+  videoImage.height = sceneData.height;
+  videoImageContext = videoImage.getContext( '2d' );
+  // background color if no video present
+  videoImageContext.fillStyle = '#000000';
+  videoImageContext.fillRect( 0, 0, videoImage.width, videoImage.height );
+  videoTexture = new THREE.Texture( videoImage );
+  videoTexture.minFilter = THREE.LinearFilter;
+  videoTexture.magFilter = THREE.LinearFilter;
+
+  var movieMaterial = new THREE.MeshBasicMaterial( { map: videoTexture, overdraw: true, side:THREE.DoubleSide } );
+  // the geometry on which the movie will be displayed;
+  //    movie image will be scaled to fit these dimensions.
+  var movieGeometry = new THREE.PlaneGeometry( sceneData.width, sceneData.height, 4, 4 );
+  var movieScreen = new THREE.Mesh( movieGeometry, movieMaterial );
+  movieScreen.position.set(0,0,0);
+  scene.add(movieScreen);
+
+  camera.position.set(0,0,800);
+  camera.lookAt(movieScreen.position);
+
+  $.getJSON( sceneData.data, function( data ) {
+    faceData = data;
+    computeUV(faceData[faceData.length - 2]);
+    // console.log(faceData);
+    video.play();
+  });
+}
+function animate()
+{
+    requestAnimationFrame( animate );
+  render();
+  update();
+}
+function update()
+{
+  if ( keyboard.pressed("p") )
+    video.play();
+
+  if ( keyboard.pressed("space") )
+    video.pause();
+  if ( keyboard.pressed("s") ) // stop video
+  {
+    video.pause();
+    video.currentTime = 0;
+  }
+
+  if ( keyboard.pressed("r") ) // rewind video
+    video.currentTime = 0;
+
+  controls.update();
+  stats.update();
+}
+
+function computeUV(calib) {
+  console.log(calib);
+  var w = 433;
+  var h = 550;
+  var layer = [];
+  for(var i = 0; i < triangleFaces.length; i++) {
+    var t = triangleFaces[i];
+    var verts = [t.a,t.b,t.c];
+    var faceUvs = [];
+    for(var j = 0; j < 3; j++) {
+      var c = calib[verts[j]];
+      faceUvs.push(new THREE.Vector2(c[0] / w, 1-(c[1] / h)));
+      // faceUvs.push(new THREE.UV(0.0,0.0));
+    }
+    layer.push(faceUvs);
+  }
+  overlayGeom.faceVertexUvs[0] = layer;
+  // overlayGeom.computeVertexNormals();
+  // overlayGeom.computeTangents();
+  // console.log([overlayGeom.faceVertexUvs, overlayGeom.faces])
+  overlayGeom.uvsNeedUpdate = true;
+  // overlayGeom.faceVertexUvs[0].push([
+  //   new THREE.UV(0, 0),
+  //   new THREE.UV(0, 0),
+  //   new THREE.UV(0, 0),
+  //   new THREE.UV(0, 0)
+  // ]);
+}
+
+function updateOverlayGeom(frame) {
+  if(faceData == null || !faceData[frame] || faceData[frame].length == 0) return;
+
+  overlayGeom.vertices = [];
+  var frame = faceData[frame];
+  if(frame.length == 0) {
+    for(var i = 0; i < 68; i++) {
+      overlayGeom.vertices.push(new THREE.Vector3(500, 500, overlayOutset))
+    }
+  } else {
+    for(var i = 0; i < frame.length; i++) {
+      overlayGeom.vertices.push(new THREE.Vector3(frame[i][0] - sceneData.width/2, sceneData.height/2 - frame[i][1], overlayOutset))
+    }
+  }
+  overlayGeom.verticesNeedUpdate = true;
+}
+
+function render()
+{
+  if ( video.readyState === video.HAVE_ENOUGH_DATA )
+  {
+    videoImageContext.drawImage( video, 0, 0 );
+    curFrame = Math.round(video.currentTime * 29.97);
+    updateOverlayGeom(curFrame);
+    // console.log(curFrame);
+    if ( videoTexture )
+      videoTexture.needsUpdate = true;
+  }
+  renderer.render( scene, camera );
+}
+</script>
+
+</body>
+</html>
