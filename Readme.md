@@ -1,51 +1,26 @@
-##eyeLike
-An OpenCV based webcam gaze tracker based on a simple image gradient-based eye center algorithm by Fabian Timm.
+# FaceHack
 
-## DISCLAIMER
-**This does not track gaze yet.** It is basically just a developer reference implementation of Fabian Timm's algorithm that shows some debugging windows with points on your pupils.
+This is a terrible hack I made in 6 hours for the [TerribleHack](http://terriblehack.website/) hackathon ([see other entries](http://terriblehack.devpost.com/submissions)), a parody hackathon for making stupid things. See the [DevPost submission](http://devpost.com/software/facehack) for more screenshots and explanation.
 
-If you want cheap gaze tracking and don't mind hardware check out [The Eye Tribe](https://theeyetribe.com/).
-If you want webcam-based eye tracking contact [Xlabs](http://xlabsgaze.com/) or use their chrome plugin and SDK.
-If you're looking for open source your only real bet is [Pupil](http://pupil-labs.com/) but that requires an expensive hardware headset.
+It uses OpenCV and [dlib](http://blog.dlib.net/2014/08/real-time-face-pose-estimation.html) to perform face pose detection on downloaded Youtube videos and webcam photos. It then uses a triangulation of the detected face points to texture map a picture of your face onto the faces in the video. The face detection is computed beforehand in a C++ program and outpus location data in a JSON file, which is read by a Three.JS web page that renders the video and synchronizes the mapped rendering of a face on top of the video.
 
-##Status
-The eye center tracking works well but I don't have a reference point like eye corner yet so it can't actually track
-where the user is looking.
+![Gif](http://i.imgur.com/0geqsOU.gifv)
 
-If anyone with more experience than me has ideas on how to effectively track a reference point or head pose
-so that the gaze point on the screen can be calculated contact me.
+![Face detection](http://i.imgur.com/w7lfLjW.png)
 
-##Building
+In the demo, my face is warped over Rick Astley in the "Never gonna give you up" video.
+The lips of the warped face and the rotation both follow Rick because of the flexible mapping.
 
-CMake is required to build eyeLike.
+## How to run
 
-###OSX or Linux with Make
-```bash
-# do things in the build directory so that we don't clog up the main directory
-mkdir build
-cd build
-cmake ../
-make
-./bin/eyeLike # the executable file
-```
+There's a lot of things in the `.gitignore` file since there's some large data and copy-pasted videos and libraries.
+Because I was frantically trying to finish it in 6 hours a lot of the paths are hard-coded and there isn't a good linking and resources loading story.
 
-###On OSX with XCode
-```bash
-mkdir build
-./cmakeBuild.sh
-```
-then open the XCode project in the build folder and run from there.
-
-###On Windows
-There is some way to use CMake on Windows but I am not familiar with it.
-
-##Blog Article:
-- [Using Fabian Timm's Algorithm](http://thume.ca/projects/2012/11/04/simple-accurate-eye-center-tracking-in-opencv/)
-
-##Paper:
-Timm and Barth. Accurate eye centre localisation by means of gradients.
-In Proceedings of the Int. Conference on Computer Theory and
-Applications (VISAPP), volume 1, pages 125-130, Algarve, Portugal,
-2011. INSTICC.
-
-(also see youtube video at http://www.youtube.com/watch?feature=player_embedded&v=aGmGyFLQAFM)
+You'll need to do at least the following things:
+- Downoad [dlib](http://dlib.net/) and put it in the `dlib` folder, this is because the only good building method for DLib is to include its CMake file in your project and have it compile with your project. :|
+- Put the DLib face model, a photo of yourself, and a video into the `res` folder for processing.
+- make a `build` folder, cd into it, and run `cmake ..`
+- alter all the paths in the source code to work
+- run `make`, then run `./bin/faceHack`, this will process the video and output a JSON file
+- copy the required resources and put them in the `web` directory and run a simple HTTP server like `ruby -run -e httpd . -p 9090`
+- visit `http://localhost:9090/` to view your video
