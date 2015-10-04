@@ -1,0 +1,8 @@
+build/*
+build2
+res/shape_predictor_68_face_landmarks.dat
+.DS_Store
+Makefile
+dlib
+*.sublime-project
+*.sublime-workspace
